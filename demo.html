@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+	<meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+	<title>投票</title>
+	<style>
+	* {
+		padding: 0;
+		margin: 0;
+	}
+	html, body {
+		height: 100%;
+	}
+	#cont .ac-columnSet{
+		height: 300px
+	}
+	#cont .ac-columnSet .ac-image{
+		height: 100%;
+		flex: unset !important;
+		justify-content: center !important;
+		align-items: flex-end !important;
+	}
+</style>
+<script>
+	window.onerror = function() {
+		alert(JSON.stringify(arguments))
+	};
+</script>
+</head>
+<body>		
+	<script src="https://unpkg.com/adaptivecards/dist/adaptivecards.js"></script>
+	<script>
+		/*选*/
+
+		var data = {
+			"Steak": 10,
+			"Chicken":20,
+			"Vegetarian":10
+		}
+		var renderOptions = {
+			hostConfig: {
+				"supportsInteractivity": true,
+				"fontFamily": "Segoe UI",
+				"fontSizes": {
+					"small": 12,
+					"default": 14,
+					"medium": 17,
+					"large": 21,
+					"extraLarge": 26
+				},
+				"fontWeights": {
+					"lighter": 200,
+					"default": 400,
+					"bolder": 600
+				},
+				"imageSizes": {
+					"small": 40,
+					"medium": 80,
+					"large": 160
+				},
+				"containerStyles": {
+					"default": {
+						"fontColors": {
+							"default": {
+								"normal": "#333333",
+								"subtle": "#EE333333"
+							},
+							"accent": {
+								"normal": "#2E89FC",
+								"subtle": "#882E89FC"
+							},
+							"good": {
+								"normal": "#54a254",
+								"subtle": "#DD54a254"
+							},
+							"warning": {
+								"normal": "#e69500",
+								"subtle": "#DDe69500"
+							},
+							"attention": {
+								"normal": "#cc3300",
+								"subtle": "#DDcc3300"
+							}
+						},
+						"backgroundColor": "#00000000"
+					},
+					"emphasis": {
+						"fontColors": {
+							"default": {
+								"normal": "#333333",
+								"subtle": "#EE333333"
+							},
+							"accent": {
+								"normal": "#2E89FC",
+								"subtle": "#882E89FC"
+							},
+							"good": {
+								"normal": "#54a254",
+								"subtle": "#DD54a254"
+							},
+							"warning": {
+								"normal": "#e69500",
+								"subtle": "#DDe69500"
+							},
+							"attention": {
+								"normal": "#cc3300",
+								"subtle": "#DDcc3300"
+							}
+						},
+						"backgroundColor": "#08000000"
+					}
+				},
+				"spacing": {
+					"small": 3,
+					"default": 8,
+					"medium": 20,
+					"large": 30,
+					"extraLarge": 40,
+					"padding": 20
+				},
+				"separator": {
+					"lineThickness": 1,
+					"lineColor": "#EEEEEE"
+				},
+				"actions": {
+					"maxActions": 5,
+					"spacing": "Default",
+					"buttonSpacing": 10,
+					"showCard": {
+						"actionMode": "Inline",
+						"inlineTopMargin": 16,
+						"style": "Emphasis"
+					},
+					"preExpandSingleShowCardAction": false,
+					"actionsOrientation": "Horizontal",
+					"actionAlignment": "Stretch"
+				},
+				"adaptiveCard": {
+					"allowCustomStyle": false
+				},
+				"imageSet": {
+					"imageSize": "Medium",
+					"maxImageHeight": "maxImageHeight"
+				},
+				"factSet": {
+					"title": {
+						"size": "Default",
+						"color": "Default",
+						"isSubtle": false,
+						"weight": "Bolder",
+						"warp": true
+					},
+					"value": {
+						"size": "Default",
+						"color": "Default",
+						"isSubtle": false,
+						"weight": "Default",
+						"warp": true
+					},
+					"spacing": 10
+				}
+			},
+			onExecuteAction: function (action) { 
+				data[action.data.FoodChoice] = data[action.data.FoodChoice] + 10;
+				render()
+			},
+		}
+		render()
+		function render(){
+			var template = {
+				"type": "AdaptiveCard",
+				"version": "1.0",
+				"body": [
+				{
+					"type": "TextBlock",
+					"text": "你更喜欢哪种食物?",
+					"wrap": true
+				},
+				{
+					"type": "ColumnSet",
+					"id":"cont",
+					"columns": [
+					{
+						"type":"Column",
+						"width":"stretch",
+						"items":[
+						{
+							"type": "ColumnSet",
+							"columns":[
+							{
+								"type":"Column",
+								"width":"stretch",
+								"items":[
+								{
+									"type": "Image",
+									"pixelWidth": 50,
+									"pixelHeight": data.Steak,
+									"width":"stretch",
+									"url": "./img/timg_03.jpg"
+								},
+								{
+									"type": "TextBlock",
+									"text":data.Steak,
+									"horizontalAlignment":"center",
+								}
+								]
+							}
+							
+							]
+						},
+						]
+					},
+					
+					
+					{
+						"type": "Column",
+						"items": [
+						{
+							"type": "ColumnSet",
+							"columns":[
+							{
+								"type":"Column",
+								"width":"stretch",
+								"items":[
+								{
+									"type": "Image",
+									"pixelWidth": 50,
+									"pixelHeight": data.Chicken,
+									"width":"stretch",
+									"url": "./img/timg_05.jpg"
+								},
+								{
+									"type": "TextBlock",
+									"text":data.Chicken,
+									"horizontalAlignment":"center",
+								}
+								]
+							}
+							
+							]
+						},
+						]
+					},
+					{
+						"type": "Column",
+						"items": [
+						{
+							"type": "ColumnSet",
+							"columns":[
+							{
+								"type":"Column",
+								"width":"stretch",
+								"items":[
+								{
+									"type": "Image",
+									"pixelWidth": 50,
+									"pixelHeight": data.Vegetarian,
+									"width":"stretch",
+									"url": "./img/timg_09.jpg"
+								},
+								{
+									"type": "TextBlock",
+									"text":data.Vegetarian,
+									"horizontalAlignment":"center",
+								}
+								]
+							}
+							
+							]
+						},
+						]
+					}
+					]
+				},
+				],
+				"actions": [
+				{
+					"type": "Action.Submit",
+					"title": "牛肉",
+					"data": {
+						"FoodChoice": "Steak"
+					}
+				},
+				{
+					"type": "Action.Submit",
+					"title": "鸡肉",
+					"data": {
+						"FoodChoice": "Chicken"
+					}
+				},
+				{
+					"type": "Action.Submit",
+					"title": "豆腐",
+					"data": {
+						"FoodChoice": "Vegetarian"
+					}
+				}
+				]
+			};
+			var renderedCard = AdaptiveCards.renderCard(template, renderOptions);
+			var cont = document.getElementById('cont');
+			if(cont == null){
+				cont = document.createElement('div');
+				cont.id = 'cont';
+				cont.appendChild(renderedCard);
+				document.body.appendChild(cont)
+			}else{
+				var old = cont.getElementsByTagName('div');
+				document.getElementById('cont').replaceChild(renderedCard,old[0]);
+			}
+		}
+
+
+//http://api.jirengu.com/
+</script>
+</body>
+</html>
