@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>天气聊天机器人</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: #000;
+            color: #fff;
+            height: 60px;
+            display: none;
+            text-align: center;
+            font-size: 24px;
+            line-height: 60px;
+        }
+        .main {
+            flex: 1;
+            padding: 0 10px;
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+        footer {
+            display: flex;
+            background: #fff;
+            height: 60px;
+            border-top: 1px solid #cccccc;
+        }
+        .send-form {
+            display: flex;
+            width: 100%;
+        }
+        footer * {
+            font-size: 20px;
+            outline: none;
+        }
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+        .input-wrapper input {
+            -webkit-appearance: none;
+            display: block;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            background: #fff;
+            padding: 5px 10px;
+            width: 100%;
+        }
+        .send-wrapper {
+            display: flex;
+            width: 100px;
+            align-items: center;
+        }
+        .send {
+            -webkit-appearance: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            width: 60px;
+            background: #000;
+            color: #fff;
+            padding: 5px 10px;
+            text-align: center;
+            margin: 0 auto;
+            border-radius: 5px;
+        }
+        .msg {
+            display: flex;
+            padding: 10px 40px 10px 0;
+        }
+        .msg.to {
+            flex-direction: row-reverse;
+            padding: 10px 0 10px 40px;
+        }
+        .msg-content {
+            flex: 1;
+            margin-left: 10px;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(234, 234, 234, 0.682);
+        }
+        .msg.to .msg-content {
+            margin-left: 0;
+            margin-right: 10px;
+            background: #0078D7;
+            color: #fff;
+        }
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            background: url("//messagecardplayground.azurewebsites.net/assets/Mostly%20Cloudy-Square.png")
+                no-repeat center;
+            background-size: 100%;
+        }
+        /* .ac-container{
+            background-color: red;
+        } */
+    </style>
+    <script>
+        window.onerror = function() {
+            alert(JSON.stringify(arguments))
+        };
+    </script>
+</head>
+<body>
+<header></header>
+<div class="main">
+    <div class="list">
+        <!--<div class="msg come">-->
+            <!--<div class="avatar"></div>-->
+            <!--<div class="msg-content">你好</div>-->
+        <!--</div>-->
+        <!--<div class="msg to">-->
+            <!--<div class="avatar"></div>-->
+            <!--<div class="msg-content">你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好</div>-->
+        <!--</div>-->
+        <!--<div class="msg come">-->
+            <!--<div class="avatar"></div>-->
+            <!--<div class="msg-content">你好</div>-->
+        <!--</div>-->
+    </div>
+</div>
+<footer>
+    <form class="send-form" action="">
+        <div class="input-wrapper">
+            <input type="text" id="content" placeholder="输入要查询天气的城市" autocomplete="off" autofocus="autofocus"/>
+        </div>
+        <div class="send-wrapper">
+            <input type="submit" class="send" value="发送"/>
+        </div>
+    </form>
+</footer>
+<script src="https://unpkg.com/microsoft-adaptivecards@0.6.1/dist/adaptive-cards.js"></script>
+<script src="https://unpkg.com/jquery"></script>
+<script src="https://unpkg.com/moment"></script>
+<script src="https://creeperyang.github.io/pinyin/browser.js"></script>
+<script>
+
+    AdaptiveCards.setHostConfig({
+        "supportsInteractivity": true,
+        "strongSeparation": {
+            "spacing": 40,
+            "lineThickness": 1,
+            "lineColor": "#EEEEEE"
+        },
+        "fontFamily": "Segoe UI",
+        "fontSizes": {
+            "small": 12,
+            "normal": 14,
+            "medium": 17,
+            "large": 21,
+            "extraLarge": 26
+        },
+        "fontWeights": {
+            "lighter": 200,
+            "normal": 400,
+            "bolder": 600
+        },
+        "colors": {
+            "dark": {
+                "normal": "#333333",
+                "subtle": "#EE333333"
+            },
+            "light": {
+                "normal": "#FFFFFF",
+                "subtle": "#88FFFFFF"
+            },
+            "accent": {
+                "normal": "#2E89FC",
+                "subtle": "#882E89FC"
+            },
+            "attention": {
+                "normal": "#cc3300",
+                "subtle": "#DDcc3300"
+            },
+            "good": {
+                "normal": "#54a254",
+                "subtle": "#DD54a254"
+            },
+            "warning": {
+                "normal": "#e69500",
+                "subtle": "#DDe69500"
+            }
+        },
+        "imageSizes": {
+            "small": 40,
+            "medium": 80,
+            "large": 160
+        },
+        "actions": {
+            "maxActions": 5,
+            "separation": {
+                "spacing": 20
+            },
+            "buttonSpacing": 10,
+            "showCard": {
+                "actionMode": "inlineEdgeToEdge",
+                "inlineTopMargin": 16,
+                "backgroundColor": "#08000000",
+                "padding": {
+                    "top": 16,
+                    "right": 16,
+                    "bottom": 16,
+                    "left": 16
+                }
+            },
+            "actionsOrientation": "horizontal",
+            "actionAlignment": "stretch"
+        },
+        "adaptiveCard": {
+            "backgroundColor": "#00000000",
+            "padding": {
+                "left": 20,
+                "top": 20,
+                "right": 20,
+                "bottom": 20
+            }
+        },
+        "container": {
+            "separation": {
+                "spacing": 20
+            },
+            "normal": {},
+            "emphasis": {
+                "backgroundColor": "#EEEEEE",
+                "borderColor": "#AAAAAA",
+                "borderThickness": {
+                    "top": 1,
+                    "right": 1,
+                    "bottom": 1,
+                    "left": 1
+                },
+                "padding": {
+                    "top": 10,
+                    "right": 10,
+                    "bottom": 10,
+                    "left": 10
+                }
+            }
+        },
+        "textBlock": {
+            "color": "dark",
+            "separations": {
+                "small": {
+                    "spacing": 20
+                },
+                "normal": {
+                    "spacing": 20
+                },
+                "medium": {
+                    "spacing": 20
+                },
+                "large": {
+                    "spacing": 20
+                },
+                "extraLarge": {
+                    "spacing": 20
+                }
+            }
+        },
+        "image": {
+            "size": "medium",
+            "separation": {
+                "spacing": 20
+            }
+        },
+        "imageSet": {
+            "imageSize": "medium",
+            "separation": {
+                "spacing": 20
+            }
+        },
+        "factSet": {
+            "separation": {
+                "spacing": 20
+            },
+            "title": {
+                "color": "dark",
+                "size": "normal",
+                "isSubtle": false,
+                "weight": "bolder",
+                "wrap": true,
+                "maxWidth": 150
+            },
+            "value": {
+                "color": "dark",
+                "size": "normal",
+                "isSubtle": false,
+                "weight": "normal",
+                "wrap": true
+            },
+            "spacing": 10
+        },
+        "input": {
+            "separation": {
+                "spacing": 20
+            }
+        },
+        "columnSet": {
+            "separation": {
+                "spacing": 20
+            }
+        },
+        "column": {
+            "separation": {
+                "spacing": 20
+            }
+        }
+    });
+
+    function getCityId(city, callback) {
+        $.get('cityId.json')
+            .then(function(data) {
+                var data = JSON.parse(data);
+                if(data['results'][0]['id']) {
+                    callback && callback(data['results'][0]['id']);
+                }
+            });
+    }
+
+    function getWeather(cityId, callback) {
+        $.get('nowWeather.json', {cityid: cityId})
+            .then(function(data) {
+                var data = JSON.parse(data);
+                if(data['weather']) {
+                    callback && callback(data['weather']);
+                }
+            });
+    }
+
+    function buildCardObj(weather) {
+        var cityName = weather[0].city_name;
+        var lastUpdateTime = moment().format('YYYY年MM月DD日 HH:mm');//weather[0].last_update;
+        var imageUrl = '//weixin.jirengu.com/images/weather/code/' + weather[0].now.code + '.png';
+        var date = moment().format('YYYY-MM-DD');
+        var temperature = weather[0].now.temperature;
+        var text = weather[0].now.text;
+        var high = weather[0].future[0].high;
+        var low = weather[0].future[0].low;
+        for(var i = 0; i < weather[0].future.length; i ++) {
+            if(weather[0].future[i].date === date) {
+                high = weather[0].future[i].high;
+                low = weather[0].future[i].low;
+                break;
+            }
+        }
+        var template = {
+            "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "0.5",
+            "speak": "<s></s>",
+            "body": [
+                {
+                    "type": "Container",
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text":  cityName + " - " + lastUpdateTime,
+                            "isSubtle": true
+                        }
+                    ]
+                },
+                {
+                    "type": "Container",
+                    "items": [
+                        {
+                            "type": "ColumnSet",
+                            "columns": [
+                                {
+                                    "type": "Column",
+                                    "size": "auto",
+                                    "items": [
+                                        {
+                                            "type": "Image",
+                                            "url": imageUrl,
+                                            "size": "small",
+                                            "horizontalAlignment": "center"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Column",
+                                    "size": "auto",
+                                    "items": [
+                                        {
+                                            "type": "ColumnSet",
+                                            "columns": [
+                                                {
+                                                    "type": "Column",
+                                                    "size": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": temperature,
+                                                            "size": "extraLarge"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Column",
+                                                    "size": "auto",
+                                                    "items": [
+                                                        {
+                                                            "type": "TextBlock",
+                                                            "text": "°C",
+                                                            "weight": "bolder"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "TextBlock",
+                                            "text": text,
+                                            "isSubtle": true
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Column",
+                                    "size": "auto",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "最高温度 " + high + "°C"
+                                        },
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "最低温度 " + low + "°C"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        var card = new AdaptiveCards.AdaptiveCard();
+        card.parse(template);
+        var htmlElement = card.render();
+        console.log(htmlElement);
+        return htmlElement;
+    }
+
+    function addMsg(msg, type) {
+        if(msg instanceof HTMLElement) {
+            msg = msg.outerHTML;
+        }
+        var html = '<div class="msg ' + type + '">\n' +
+            '            <div class="avatar"></div>\n' +
+            '            <div class="msg-content">' + msg + '</div>\n' +
+            '        </div>';
+        $('.list').append(html);
+        setTimeout(function() {
+            $('.main')[0].scrollTop = 999999999;
+        }, 30);
+    }
+
+    $(function() {
+
+        if(! /MicroMessenger/i.test(navigator.userAgent)) {
+            $('header').text(document.title).show();
+        }
+
+        var $text = $('#content');
+        //$('.send-form').on('submit', function(e) {
+           // e.preventDefault();
+            var text = $text.val();
+            $text.val('');
+            addMsg(text, 'to');
+            text = Pinyin.convertToPinyin(text, '', true);
+            getCityId(text, function(cityId) {
+                console.log(cityId);
+                getWeather(cityId, function(weather) {
+                    console.log(weather)
+                    var html = buildCardObj(weather);
+                    addMsg(html, 'come');
+                });
+            });
+
+        //});
+    });
+    var card = {
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "Image",
+            "url": "http://adaptivecards.io/content/adaptive-card-50.png"
+        },
+        {
+            "type": "TextBlock",
+            "text": "Hello **Adaptive Cards!**"
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.OpenUrl",
+            "title": "Learn more",
+            "url": "http://adaptivecards.io"
+        },
+        {
+            "type": "Action.OpenUrl",
+            "title": "GitHub",
+            "url": "http://github.com/Microsoft/AdaptiveCards"
+        }
+    ]
+};
+
+// define your render options
+var renderOptions = {
+
+    // a Host Config defines the style and behavior of all cards
+    hostConfig: {
+        "fontFamily": "Segoe UI, Helvetica Nue, sans-serif"
+    },
+
+    // the action handler is invoked when actions are pressed
+    onExecuteAction: function (action) { alert("Ow!"); },
+
+    // For markdown support you need a third-party library
+    // E.g., to use markdown-it include the script and add the following:
+    // <!-- <script type="text/javascript" src="https://unpkg.com/markdown-it/dist/markdown-it.js"> -->
+    //processMarkdown: function (text) { return markdownit().render(text); }
+};
+
+
+// render the card to HTML
+var renderedCard = AdaptiveCards.renderCard(card, renderOptions);
+
+// now put it somewhere!
+document.body.appendChild(renderedCard);
+//http://api.jirengu.com/
+</script>
+</body>
+</html>
