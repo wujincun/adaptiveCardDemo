@@ -13,10 +13,14 @@
 	html, body {
 		height: 100%;
 	}
-	#cont .ac-columnSet{
+	#cont0 .ac-columnSet,#cont1 .ac-columnSet,#cont2 .ac-columnSet,#cont3 .ac-columnSet,
+	#cont4 .ac-columnSet,#cont5 .ac-columnSet,#cont6 .ac-columnSet,#cont7 .ac-columnSet,
+	#cont8 .ac-columnSet,#cont9 .ac-columnSet{
 		height: 300px
 	}
-	#cont .ac-columnSet .ac-image{
+	#cont0 .ac-columnSet  .ac-image,#cont1 .ac-columnSet  .ac-image,#cont2 .ac-columnSet  .ac-image,#cont3 .ac-columnSet  .ac-image,
+	#cont4 .ac-columnSet  .ac-image,#cont5 .ac-columnSet  .ac-image,#cont6 .ac-columnSet  .ac-image,#cont7 .ac-columnSet  .ac-image,
+	#cont8 .ac-columnSet  .ac-image,#cont9 .ac-columnSet  .ac-image{
 		height: 100%;
 		flex: unset !important;
 		justify-content: center !important;
@@ -33,12 +37,7 @@
 	<script src="https://unpkg.com/adaptivecards/dist/adaptivecards.js"></script>
 	<script>
 		/*选*/
-
-		var data = {
-			"Steak": 10,
-			"Chicken":20,
-			"Vegetarian":10
-		}
+		var data ={};
 		var renderOptions = {
 			hostConfig: {
 				"supportsInteractivity": true,
@@ -58,7 +57,7 @@
 				"imageSizes": {
 					"small": 40,
 					"medium": 80,
-					"large": 160
+					"large": 160,
 				},
 				"containerStyles": {
 					"default": {
@@ -138,7 +137,7 @@
 					"actionAlignment": "Stretch"
 				},
 				"adaptiveCard": {
-					"allowCustomStyle": false
+					/*"allowCustomStyle": true*/
 				},
 				"imageSet": {
 					"imageSize": "Medium",
@@ -163,152 +162,300 @@
 				}
 			},
 			onExecuteAction: function (action) { 
-				data[action.data.FoodChoice] = data[action.data.FoodChoice] + 10;
-				render()
+				id = action.data.id;
+				data[id][action.data.FoodChoice] = data[id][action.data.FoodChoice] + 10;
+				render(id)
 			},
 		}
 		render()
-		function render(){
-			var template = {
-				"type": "AdaptiveCard",
-				"version": "1.0",
-				"body": [
-				{
-					"type": "TextBlock",
-					"text": "你更喜欢哪种食物?",
-					"wrap": true
-				},
-				{
-					"type": "ColumnSet",
-					"id":"cont",
-					"columns": [
+		function render(id){
+			if(id){
+				var el = document.getElementById(id);
+				var old = el.getElementsByTagName('div');
+				var template = {
+					"type": "AdaptiveCard",
+					"version": "1.0",
+					"body": [
 					{
-						"type":"Column",
-						"width":"stretch",
-						"items":[
-						{
-							"type": "ColumnSet",
-							"columns":[
-							{
-								"type":"Column",
-								"width":"stretch",
-								"items":[
-								{
-									"type": "Image",
-									"pixelWidth": 50,
-									"pixelHeight": data.Steak,
-									"width":"stretch",
-									"url": "./img/timg_03.jpg"
-								},
-								{
-									"type": "TextBlock",
-									"text":data.Steak,
-									"horizontalAlignment":"center",
-								}
-								]
-							}
-							
-							]
-						},
-						]
-					},
-					
-					
-					{
-						"type": "Column",
-						"items": [
-						{
-							"type": "ColumnSet",
-							"columns":[
-							{
-								"type":"Column",
-								"width":"stretch",
-								"items":[
-								{
-									"type": "Image",
-									"pixelWidth": 50,
-									"pixelHeight": data.Chicken,
-									"width":"stretch",
-									"url": "./img/timg_05.jpg"
-								},
-								{
-									"type": "TextBlock",
-									"text":data.Chicken,
-									"horizontalAlignment":"center",
-								}
-								]
-							}
-							
-							]
-						},
-						]
+						"type": "TextBlock",
+						"text": "你更喜欢哪种食物?",
+						"wrap": true
 					},
 					{
-						"type": "Column",
-						"items": [
+						"type": "ColumnSet",
+						"id":"cont",
+						"columns": [
 						{
-							"type": "ColumnSet",
-							"columns":[
+							"type":"Column",
+							"width":"stretch",
+							"items":[
 							{
-								"type":"Column",
-								"width":"stretch",
-								"items":[
+								"type": "ColumnSet",
+								"columns":[
 								{
-									"type": "Image",
-									"pixelWidth": 50,
-									"pixelHeight": data.Vegetarian,
+									"type":"Column",
 									"width":"stretch",
-									"url": "./img/timg_09.jpg"
-								},
-								{
-									"type": "TextBlock",
-									"text":data.Vegetarian,
-									"horizontalAlignment":"center",
+									"items":[
+									{
+										"type": "Image",
+										"pixelWidth": 50,
+										"pixelHeight": data[id].Steak,
+										"width":"stretch",
+										"url": "./img/timg_03.jpg"
+									},
+									{
+										"type": "TextBlock",
+										"text":data[id].Steak,
+										"horizontalAlignment":"center",
+									}
+									]
 								}
+
 								]
-							}
-							
+							},
 							]
 						},
+
+
+						{
+							"type": "Column",
+							"items": [
+							{
+								"type": "ColumnSet",
+								"columns":[
+								{
+									"type":"Column",
+									"width":"stretch",
+									"items":[
+									{
+										"type": "Image",
+										"pixelWidth": 50,
+										"pixelHeight": data[id].Chicken,
+										"width":"stretch",
+										"url": "./img/timg_05.jpg"
+									},
+									{
+										"type": "TextBlock",
+										"text":data[id].Chicken,
+										"horizontalAlignment":"center",
+									}
+									]
+								}
+
+								]
+							},
+							]
+						},
+						{
+							"type": "Column",
+							"items": [
+							{
+								"type": "ColumnSet",
+								"columns":[
+								{
+									"type":"Column",
+									"width":"stretch",
+									"items":[
+									{
+										"type": "Image",
+										"pixelWidth": 50,
+										"pixelHeight": data[id].Vegetarian,
+										"width":"stretch",
+										"url": "./img/timg_09.jpg"
+									},
+									{
+										"type": "TextBlock",
+										"text":data[id].Vegetarian,
+										"horizontalAlignment":"center",
+									}
+									]
+								}
+
+								]
+							},
+							]
+						}
 						]
+					},
+					],
+					"actions": [
+					{
+						"type": "Action.Submit",
+						"title": "牛肉",
+						"data": {
+							"FoodChoice": "Steak",
+							"id":id
+						}
+					},
+					{
+						"type": "Action.Submit",
+						"title": "鸡肉",
+						"data": {
+							"FoodChoice": "Chicken",
+							"id":id
+						}
+					},
+					{
+						"type": "Action.Submit",
+						"title": "豆腐",
+						"data": {
+							"FoodChoice": "Vegetarian",
+							"id":id
+						}
 					}
 					]
-				},
-				],
-				"actions": [
-				{
-					"type": "Action.Submit",
-					"title": "牛肉",
-					"data": {
-						"FoodChoice": "Steak"
-					}
-				},
-				{
-					"type": "Action.Submit",
-					"title": "鸡肉",
-					"data": {
-						"FoodChoice": "Chicken"
-					}
-				},
-				{
-					"type": "Action.Submit",
-					"title": "豆腐",
-					"data": {
-						"FoodChoice": "Vegetarian"
-					}
-				}
-				]
-			};
-			var renderedCard = AdaptiveCards.renderCard(template, renderOptions);
-			var cont = document.getElementById('cont');
-			if(cont == null){
-				cont = document.createElement('div');
-				cont.id = 'cont';
-				cont.appendChild(renderedCard);
-				document.body.appendChild(cont)
+				};
+				var renderedCard = AdaptiveCards.renderCard(template, renderOptions);
+				el.replaceChild(renderedCard,old[0]);
 			}else{
-				var old = cont.getElementsByTagName('div');
-				document.getElementById('cont').replaceChild(renderedCard,old[0]);
+				var flag = document.createDocumentFragment();
+				for(var i=0;i<10;i++){
+					var index = 'cont'+i
+					data[index] = {
+						"Steak": 10,
+						"Chicken":20,
+						"Vegetarian":10
+					}
+					var template = {
+						"type": "AdaptiveCard",
+						"version": "1.0",
+						"body": [
+						{
+							"type": "TextBlock",
+							"text": "你更喜欢哪种食物?",
+							"wrap": true
+						},
+						{
+							"type": "ColumnSet",
+							"id":"cont",
+							"columns": [
+							{
+								"type":"Column",
+								"width":"stretch",
+								"items":[
+								{
+									"type": "ColumnSet",
+									"columns":[
+									{
+										"type":"Column",
+										"width":"stretch",
+										"items":[
+										{
+											"type": "Image",
+											"pixelWidth": 50,
+											"pixelHeight": data[index].Steak,
+											"width":"stretch",
+											"url": "./img/timg_03.jpg"
+										},
+										{
+											"type": "TextBlock",
+											"text":data[index].Steak,
+											"horizontalAlignment":"center",
+										}
+										]
+									}
+
+									]
+								},
+								]
+							},
+
+
+							{
+								"type": "Column",
+								"items": [
+								{
+									"type": "ColumnSet",
+									"columns":[
+									{
+										"type":"Column",
+										"width":"stretch",
+										"items":[
+										{
+											"type": "Image",
+											"pixelWidth": 50,
+											"pixelHeight": data[index].Chicken,
+											"width":"stretch",
+											"url": "./img/timg_05.jpg"
+										},
+										{
+											"type": "TextBlock",
+											"text":data[index].Chicken,
+											"horizontalAlignment":"center",
+										}
+										]
+									}
+
+									]
+								},
+								]
+							},
+							{
+								"type": "Column",
+								"items": [
+								{
+									"type": "ColumnSet",
+									"columns":[
+									{
+										"type":"Column",
+										"width":"stretch",
+										"items":[
+										{
+											"type": "Image",
+											"pixelWidth": 50,
+											"pixelHeight": data[index].Vegetarian,
+											"width":"stretch",
+											"url": "./img/timg_09.jpg"
+										},
+										{
+											"type": "TextBlock",
+											"text":data[index].Vegetarian,
+											"horizontalAlignment":"center",
+										}
+										]
+									}
+
+									]
+								},
+								]
+							}
+							]
+						},
+						],
+						"actions": [
+						{
+							"type": "Action.Submit",
+							"title": "牛肉",
+							"data": {
+								"FoodChoice": "Steak",
+								"id":"cont"+i
+							}
+						},
+						{
+							"type": "Action.Submit",
+							"title": "鸡肉",
+							"data": {
+								"FoodChoice": "Chicken",
+								"id":"cont"+i
+							}
+						},
+						{
+							"type": "Action.Submit",
+							"title": "豆腐",
+							"data": {
+								"FoodChoice": "Vegetarian",
+								"id":"cont"+i
+							}
+						}
+						]
+					};
+					var renderedCard = AdaptiveCards.renderCard(template, renderOptions);
+					cont = document.createElement('div');
+					cont.id = 'cont'+i;
+					cont.appendChild(renderedCard);
+					flag.appendChild(cont);
+				}
+				document.body.appendChild(flag)
 			}
 		}
 
